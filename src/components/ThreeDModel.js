@@ -1,8 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { MeshDistortMaterial } from '@react-three/drei';
-import { BackgroundSphere } from '@react-three/drei';
+import { MeshDistortMaterial, Environment } from '@react-three/drei';
 
 const ThreeDModel = ({ testResults }) => {
   const meshRef = useRef();
@@ -43,8 +42,6 @@ const ThreeDModel = ({ testResults }) => {
       }
       geometry.computeVertexNormals();
 
-      // Emotion: 노란색 요소, 물결 효과는 MeshDistortMaterial에서 처리됨
-
       // Hidden: 전체적인 투명도 및 광택
       const opacity = 1 - (testResults.hidden / 200);
       const shininess = testResults.hidden / 100;
@@ -65,25 +62,23 @@ const ThreeDModel = ({ testResults }) => {
 
   return (
     <>
-      <BackgroundSphere>
-        <meshBasicMaterial color="#1a202c" side={THREE.BackSide} />
-      </BackgroundSphere>
+      <Environment preset="sunset" background />
       <mesh ref={meshRef}>
-      <icosahedronGeometry args={[1, 2]} />
-      <MeshDistortMaterial
-        color={new THREE.Color(
-          testResults.physical / 100,
-          testResults.perception / 100,
-          testResults.intelligence / 100
-        )}
-        distort={testResults.emotion / 500}
-        speed={1.5}
-        transparent
-        opacity={1 - (testResults.hidden / 200)}
-        metalness={testResults.hidden / 100}
-        roughness={0.5}
-      />
-     </mesh>
+        <icosahedronGeometry args={[1, 2]} />
+        <MeshDistortMaterial
+          color={new THREE.Color(
+            testResults.physical / 100,
+            testResults.perception / 100,
+            testResults.intelligence / 100
+          )}
+          distort={testResults.emotion / 500}
+          speed={1.5}
+          transparent
+          opacity={1 - (testResults.hidden / 200)}
+          metalness={testResults.hidden / 100}
+          roughness={0.5}
+        />
+      </mesh>
     </>
   );
 };
