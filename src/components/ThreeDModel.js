@@ -42,8 +42,7 @@ const ThreeDModel = ({ testResults }) => {
       }
       geometry.computeVertexNormals();
 
-      // Emotion: 노란색 요소, 물결 효과
-      const distortFactor = testResults.emotion / 500;
+      // Emotion: 노란색 요소, 물결 효과는 MeshDistortMaterial에서 처리됨
 
       // Hidden: 전체적인 투명도 및 광택
       const opacity = 1 - (testResults.hidden / 200);

@@ -97,6 +97,9 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
       case 'kakao':
         alert('Kakao sharing functionality needs to be implemented with Kakao SDK');
         return;
+      default:
+        alert('Unsupported sharing platform');
+        return;
     }
 
     window.open(url, '_blank');
