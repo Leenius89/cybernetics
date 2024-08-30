@@ -62,7 +62,10 @@ const ThreeDModel = ({ testResults }) => {
 
   return (
     <>
-      <Environment preset="sunset" background />
+      <color attach="background" args={['white']} />
+      <Environment preset="sunset" />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
       <mesh ref={meshRef}>
         <icosahedronGeometry args={[1, 2]} />
         <MeshDistortMaterial
