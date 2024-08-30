@@ -13,7 +13,6 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [email, setEmail] = useState('');
-
   const downloadImage = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -165,9 +164,17 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
   };
   return (
     <div className="flex flex-col md:flex-row md:space-x-8">
+      <div className="md:hidden mb-4 h-64"> {/* 모바일에서만 보이는 3D 모델 */}
+        <Canvas ref={canvasRef} camera={{ position: [0, 0, 5] }}>
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} />
+          <ThreeDModel testResults={testResults} parts={parts} />
+          <OrbitControls />
+        </Canvas>
+      </div>
       <div className="md:w-1/2">
         <h2 className="text-2xl font-bold mb-4">{userName}님의 테스트 결과</h2>
-        <div className="mb-6 h-64">
+        <div className="mb-6 h-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
           <Radar data={radarData} options={radarOptions} />
         </div>
         {Object.entries(testResults).map(([key, value]) => (
@@ -237,7 +244,7 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
               <button onClick={() => shareSNS('kakao')} className="p-2 bg-yellow-400 text-white rounded">KakaoTalk</button>
             </div>
           )}
-        </div>
+</div>
         <div className="mt-8">
           <h3 className="text-xl font-bold mb-2">결과 설명</h3>
           <p>
@@ -248,7 +255,7 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
           </p>
         </div>
       </div>
-      <div className="md:w-1/2 h-[600px] md:h-auto">
+      <div className="hidden md:block md:w-1/2 h-[600px]"> {/* 데스크톱에서만 보이는 3D 모델 */}
         <Canvas ref={canvasRef} camera={{ position: [0, 0, 5] }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />

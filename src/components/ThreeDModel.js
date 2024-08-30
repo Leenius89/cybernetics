@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { MeshDistortMaterial } from '@react-three/drei';
+import { BackgroundSphere } from '@react-three/drei';
 
 const ThreeDModel = ({ testResults }) => {
   const meshRef = useRef();
@@ -63,7 +64,11 @@ const ThreeDModel = ({ testResults }) => {
   }, [testResults]);
 
   return (
-    <mesh ref={meshRef}>
+    <>
+      <BackgroundSphere>
+        <meshBasicMaterial color="#1a202c" side={THREE.BackSide} />
+      </BackgroundSphere>
+      <mesh ref={meshRef}>
       <icosahedronGeometry args={[1, 2]} />
       <MeshDistortMaterial
         color={new THREE.Color(
@@ -78,7 +83,8 @@ const ThreeDModel = ({ testResults }) => {
         metalness={testResults.hidden / 100}
         roughness={0.5}
       />
-    </mesh>
+     </mesh>
+    </>
   );
 };
 

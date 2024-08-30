@@ -88,24 +88,32 @@ return (
           <StartPage onStart={handleStart} />
         )}
         {stage === 'test' && (
-          <div className="flex flex-col md:flex-row md:space-x-8">
-            <div className="md:w-1/2 mb-8 md:mb-0">
-              <PsycheTest 
-                questions={questions} 
-                onAnswerChange={handleAnswerChange}
-                onComplete={handleTestComplete}
-              />
-            </div>
-            <div className="md:w-1/2 h-[600px] md:h-auto">
-              <Canvas camera={{ position: [0, 0, 5] }}>
-                <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} />
-                <ThreeDModel testResults={testResults} />
-                <OrbitControls />
-              </Canvas>
-            </div>
-          </div>
-        )}
+  <div className="flex flex-col md:flex-row md:space-x-8">
+    <div className="md:hidden mb-4 h-64"> {/* 모바일에서만 보이는 3D 모델 */}
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} />
+        <ThreeDModel testResults={testResults} />
+        <OrbitControls />
+      </Canvas>
+    </div>
+    <div className="md:w-1/2">
+      <PsycheTest 
+        questions={questions} 
+        onAnswerChange={handleAnswerChange}
+        onComplete={handleTestComplete}
+      />
+    </div>
+    <div className="hidden md:block md:w-1/2 h-[600px]"> {/* 데스크톱에서만 보이는 3D 모델 */}
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} />
+        <ThreeDModel testResults={testResults} />
+        <OrbitControls />
+      </Canvas>
+    </div>
+  </div>
+)}
         {stage === 'result' && (
           <ResultPage 
             testResults={testResults} 

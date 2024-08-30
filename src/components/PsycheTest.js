@@ -61,7 +61,7 @@ const PsycheTest = ({ questions, onAnswerChange, onComplete }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="mt-8 md:mt-16"> {/* 상단 여백 추가 */}
       {renderQuestions()}
       <div className="flex justify-between mt-8">
         <button
