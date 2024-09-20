@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { MeshDistortMaterial, Environment, Text } from '@react-three/drei';
+import { Environment, Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 
 const ThreeDModel = ({ testResults, selectedCount }) => {
@@ -57,18 +57,18 @@ const ThreeDModel = ({ testResults, selectedCount }) => {
       <pointLight position={[10, 10, 10]} />
       <animated.mesh ref={meshRef} onClick={handleClick}>
         <sphereGeometry args={[1, 64, 64]} />
-        <animated.meshDistortMaterial
+        <animated.meshPhysicalMaterial
           color={new THREE.Color(
             testResults.physical / 100,
             testResults.perception / 100,
             testResults.intelligence / 100
           )}
-          distort={distort}
-          speed={3}
-          transparent
-          opacity={1 - (testResults.hidden / 200)}
+          clearcoat={distort}
+          clearcoatRoughness={0.5}
           metalness={testResults.hidden / 100}
           roughness={0.5}
+          transparent
+          opacity={1 - (testResults.hidden / 200)}
         />
       </animated.mesh>
       {encouragementMessage && (
