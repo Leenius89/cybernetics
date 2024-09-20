@@ -6,14 +6,14 @@ import { useNavigate } from 'react-router-dom';
 const Header = ({ darkMode, toggleDarkMode, toggleDevMode }) => {
   const navigate = useNavigate();
 
-  const handleLogoClick = () => {
+  const handleHomeNavigation = () => {
     navigate('/');
   };
 
   return (
     <header className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text p-4 transition-colors duration-200">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
+        <div className="flex items-center cursor-pointer" onClick={handleHomeNavigation}>
           <img src={logo} alt="Logo" className="h-8 w-auto mr-2" />
           <h1 className="text-2xl font-bold">Machine Butcher Corp</h1>
         </div>
@@ -25,14 +25,14 @@ const Header = ({ darkMode, toggleDarkMode, toggleDevMode }) => {
                 ? 'bg-yellow-400 text-gray-900' 
                 : 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
             }`}
-            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={darkMode ? "라이트 모드로 전환" : "다크 모드로 전환"}
           >
             {darkMode ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
           </button>
           <button 
             onClick={toggleDevMode}
             className="p-2 rounded-full bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 transition-colors duration-200 hover:bg-gray-300 dark:hover:bg-gray-600"
-            aria-label="Developer mode"
+            aria-label="개발자 모드"
           >
             <Code className="h-6 w-6" />
           </button>
