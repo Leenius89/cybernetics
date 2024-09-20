@@ -1,12 +1,19 @@
 import React from 'react';
 import { Sun, Moon, Code } from 'lucide-react';
 import logo from '../images/machinebutcher_logo.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ darkMode, toggleDarkMode, toggleDevMode }) => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
   return (
     <header className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text p-4 transition-colors duration-200">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center">
+        <div className="flex items-center cursor-pointer" onClick={handleLogoClick}>
           <img src={logo} alt="Logo" className="h-8 w-auto mr-2" />
           <h1 className="text-2xl font-bold">Machine Butcher Corp</h1>
         </div>

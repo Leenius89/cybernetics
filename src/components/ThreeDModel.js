@@ -1,64 +1,53 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { MeshDistortMaterial, Environment } from '@react-three/drei';
+import { MeshDistortMaterial, Environment, Text } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 
-const ThreeDModel = ({ testResults }) => {
+const ThreeDModel = ({ testResults, selectedCount }) => {
   const meshRef = useRef();
-  const rotationSpeed = 0.001;
+  const [isRippling, setIsRippling] = useState(false);
+  const [encouragementMessage, setEncouragementMessage] = useState('');
+  const [rippleProgress, setRippleProgress] = useState(0);
+
+  const { distort } = useSpring({
+    distort: isRippling ? 1 : 0,
+    config: { duration: 1000 }
+  });
 
   useFrame((state) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x += rotationSpeed;
-      meshRef.current.rotation.y += rotationSpeed;
-      meshRef.current.rotation.x += (state.mouse.y * 0.1 - meshRef.current.rotation.x) * 0.1;
-      meshRef.current.rotation.y += (state.mouse.x * 0.1 - meshRef.current.rotation.y) * 0.1;
+      meshRef.current.rotation.x = Math.sin(state.clock.getElapsedTime()) * 0.1;
+      meshRef.current.rotation.y = Math.cos(state.clock.getElapsedTime()) * 0.1;
     }
   });
 
   useEffect(() => {
-    if (meshRef.current) {
-      const geometry = new THREE.IcosahedronGeometry(1, Math.floor(testResults.perception / 20) + 2);
-      
-      // Intelligence: 파란색 요소, 뾰족한 형태
-      const positions = geometry.attributes.position;
-      const sharpness = testResults.intelligence / 100;
-      for (let i = 0; i < positions.count; i++) {
-        const vertex = new THREE.Vector3();
-        vertex.fromBufferAttribute(positions, i);
-        vertex.multiplyScalar(1 + Math.random() * sharpness);
-        positions.setXYZ(i, vertex.x, vertex.y, vertex.z);
-      }
-      geometry.computeVertexNormals();
-
-      // Physical: 빨간색 요소, 불규칙한 돌출
-      const physicalFactor = testResults.physical / 100;
-      for (let i = 0; i < positions.count; i++) {
-        const vertex = new THREE.Vector3();
-        vertex.fromBufferAttribute(positions, i);
-        const noise = (Math.random() - 0.5) * physicalFactor * 0.2;
-        vertex.add(new THREE.Vector3(noise, noise, noise));
-        positions.setXYZ(i, vertex.x, vertex.y, vertex.z);
-      }
-      geometry.computeVertexNormals();
-
-      // Hidden: 전체적인 투명도 및 광택
-      const opacity = 1 - (testResults.hidden / 200);
-      const shininess = testResults.hidden / 100;
-
-      // 색상 계산
-      const color = new THREE.Color(
-        testResults.physical / 100,
-        testResults.perception / 100,
-        testResults.intelligence / 100
-      );
-
-      meshRef.current.geometry = geometry;
-      meshRef.current.material.color = color;
-      meshRef.current.material.opacity = opacity;
-      meshRef.current.material.shininess = shininess * 100;
+    if (selectedCount === 5) {
+      const messages = ["Great!", "Keep going!", "Good job!"];
+      setEncouragementMessage(messages[Math.floor(Math.random() * messages.length)]);
+      setTimeout(() => setEncouragementMessage(''), 3000);
     }
-  }, [testResults]);
+  }, [selectedCount]);
+
+  const handleClick = () => {
+    setIsRippling(true);
+    // 여기에 띵 소리 재생 로직 추가
+    // 예: new Audio('path/to/ding-sound.mp3').play();
+    setTimeout(() => setIsRippling(false), 1000);
+  };
+
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      if (isRippling) {
+        setRippleProgress((prev) => Math.min(prev + delta * 2, 1));
+      } else {
+        setRippleProgress(0);
+      }
+
+      meshRef.current.material.distort = isRippling ? 1 - rippleProgress : testResults.emotion / 500;
+    }
+  });
 
   return (
     <>
@@ -66,22 +55,33 @@ const ThreeDModel = ({ testResults }) => {
       <Environment preset="sunset" />
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
-      <mesh ref={meshRef}>
-        <icosahedronGeometry args={[1, 2]} />
-        <MeshDistortMaterial
+      <animated.mesh ref={meshRef} onClick={handleClick}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <animated.meshDistortMaterial
           color={new THREE.Color(
             testResults.physical / 100,
             testResults.perception / 100,
             testResults.intelligence / 100
           )}
-          distort={testResults.emotion / 500}
-          speed={1.5}
+          distort={distort}
+          speed={3}
           transparent
           opacity={1 - (testResults.hidden / 200)}
           metalness={testResults.hidden / 100}
           roughness={0.5}
         />
-      </mesh>
+      </animated.mesh>
+      {encouragementMessage && (
+        <Text
+          position={[0, 1.5, 0]}
+          fontSize={0.5}
+          color="black"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {encouragementMessage}
+        </Text>
+      )}
     </>
   );
 };
