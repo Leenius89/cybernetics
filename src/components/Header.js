@@ -1,22 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Sun, Moon, Code } from 'lucide-react';
 import logo from '../images/machinebutcher_logo.jpg';
-import { useNavigate } from 'react-router-dom';
 
-const Header = ({ darkMode, toggleDarkMode, toggleDevMode }) => {
-  const navigate = useNavigate();
-
-  const handleHomeNavigation = () => {
-    navigate('/');
-  };
-
+function Header({ darkMode, toggleDarkMode, toggleDevMode, onReset }) {
   return (
     <header className="bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text p-4 transition-colors duration-200">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex items-center cursor-pointer" onClick={handleHomeNavigation}>
+        <Link to="/" className="flex items-center cursor-pointer" onClick={onReset}>
           <img src={logo} alt="Logo" className="h-8 w-auto mr-2" />
           <h1 className="text-2xl font-bold">Machine Butcher Corp</h1>
-        </div>
+        </Link>
         <div className="flex items-center space-x-2">
           <button 
             onClick={toggleDarkMode} 
@@ -40,6 +34,6 @@ const Header = ({ darkMode, toggleDarkMode, toggleDevMode }) => {
       </div>
     </header>
   );
-};
+}
 
 export default Header;
