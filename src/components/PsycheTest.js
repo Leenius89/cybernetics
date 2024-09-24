@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const PsycheTest = ({ questions, onAnswerChange, onComplete }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
+  const [progress, setProgress] = useState(0);
 
   const questionsPerPage = 5;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+  useEffect(() => {
+    const answeredQuestions = answers.filter(answer => answer !== null).length;
+    setProgress((answeredQuestions / questions.length) * 100);
+  }, [answers, questions.length]);
 
   const handleAnswer = (questionIndex, value) => {
     const newAnswers = [...answers];
@@ -61,7 +67,16 @@ const PsycheTest = ({ questions, onAnswerChange, onComplete }) => {
   };
 
   return (
-    <div className="mt-8 md:mt-16"> {/* 상단 여백 추가 */}
+    <div className="mt-8 md:mt-16">
+      <div className="mb-8">
+        <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+          <div
+            className="bg-blue-600 h-2.5 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <p className="text-sm text-gray-500 mt-2">{Math.round(progress)}% 완료</p>
+      </div>
       {renderQuestions()}
       <div className="flex justify-between mt-8">
         <button

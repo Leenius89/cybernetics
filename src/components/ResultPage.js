@@ -5,6 +5,8 @@ import ThreeDModel from './ThreeDModel';
 import { Radar } from 'react-chartjs-2';
 import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend } from 'chart.js';
 import { OBJExporter } from 'three/examples/jsm/exporters/OBJExporter';
+import { calculateCategoryScores } from '../utils/abilityCategorization';
+import { getDetailedInterpretation, abilityDescriptions } from '../utils/resultInterpretationUtilities';
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend);
 
@@ -13,6 +15,10 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
   const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [downloadMenuOpen, setDownloadMenuOpen] = useState(false);
   const [email, setEmail] = useState('');
+
+  const categoryScores = calculateCategoryScores(testResults);
+  const detailedInterpretation = getDetailedInterpretation(testResults, categoryScores);
+
   const downloadImage = () => {
     const canvas = canvasRef.current;
     if (canvas) {
@@ -49,8 +55,6 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
         type = 'text/plain';
         filename = 'psyche_test_result.obj';
       } else if (format === 'gltf') {
-        // GLTF export logic here
-        // This is a placeholder and needs to be implemented
         alert('GLTF export not implemented yet');
         return;
       }
@@ -105,11 +109,11 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
   };
 
   const radarData = {
-    labels: ['Perception', 'Intelligence', 'Emotion', 'Physical', 'Hidden'],
+    labels: Object.keys(categoryScores),
     datasets: [
       {
-        label: 'Test Results',
-        data: [testResults.perception, testResults.intelligence, testResults.emotion, testResults.physical, testResults.hidden],
+        label: 'Category Scores',
+        data: Object.values(categoryScores),
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         borderColor: 'rgba(255, 99, 132, 1)',
         borderWidth: 2,
@@ -140,12 +144,12 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
             return value + '%';
           },
           font: {
-            size: 10
+            size: 12
           }
         },
         pointLabels: {
           font: {
-            size: 12,
+            size: 14,
             weight: 'bold',
           },
         },
@@ -155,6 +159,13 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
       legend: {
         display: false,
       },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `${context.label}: ${context.formattedValue}%`;
+          }
+        }
+      }
     },
     elements: {
       line: {
@@ -162,34 +173,30 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
       },
     },
   };
+
   return (
     <div className="flex flex-col md:flex-row md:space-x-8">
-      <div className="md:hidden mb-4 h-64"> {/* 모바일에서만 보이는 3D 모델 */}
-        <Canvas ref={canvasRef} camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} />
-          <ThreeDModel testResults={testResults} parts={parts} />
-          <OrbitControls />
-        </Canvas>
-      </div>
+      {/* 왼쪽 열: 발견된 능력, 결과 설명, 버튼들 */}
       <div className="md:w-1/2">
         <h2 className="text-2xl font-bold mb-4">{userName}님의 테스트 결과</h2>
-        <div className="mb-6 h-64 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-          <Radar data={radarData} options={radarOptions} />
-        </div>
-        {Object.entries(testResults).map(([key, value]) => (
-          <div key={key} className="mb-2">
-            <span className="font-semibold">{key}: </span>
-            <span>{value.toFixed(2)}</span>
-          </div>
-        ))}
         <h3 className="text-xl font-bold mt-6 mb-2">발견된 능력</h3>
         {Object.entries(parts).map(([key, abilities]) => (
-          <div key={key} className="mb-2">
+          <div key={key} className="mb-4">
             <span className="font-semibold">{key}: </span>
             <span>{abilities.join(', ')}</span>
+            <ul className="list-disc list-inside mt-2">
+              {abilities.map(ability => (
+                <li key={ability} className="text-sm text-gray-600">
+                  {ability}: {abilityDescriptions[ability]}
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
+        <div className="mt-8">
+          <h3 className="text-xl font-bold mb-2">결과 설명</h3>
+          <p className="whitespace-pre-line">{detailedInterpretation}</p>
+        </div>
         <div className="mt-6 space-y-2">
           <div className="flex space-x-2">
             <button onClick={downloadImage} className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -244,24 +251,42 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
               <button onClick={() => shareSNS('kakao')} className="p-2 bg-yellow-400 text-white rounded">KakaoTalk</button>
             </div>
           )}
-</div>
-        <div className="mt-8">
-          <h3 className="text-xl font-bold mb-2">결과 설명</h3>
-          <p>
-            {userName}님의 사이버네틱 능력 테스트 결과, 당신은 {Object.entries(testResults).sort((a, b) => b[1] - a[1])[0][0]} 영역에서 특히 뛰어난 능력을 보여주셨습니다. 
-            이는 현대 사회에서 매우 유용한 능력으로, 앞으로의 삶에서 큰 강점이 될 것입니다. 
-            다만, {Object.entries(testResults).sort((a, b) => a[1] - b[1])[0][0]} 영역은 상대적으로 낮은 점수를 보이고 있어, 이 부분에 대한 개발이 필요할 것 같습니다.
-            전반적으로 균형 잡힌 능력을 보여주고 계시며, 이를 바탕으로 다양한 분야에서 성공을 이룰 수 있을 것입니다.
-          </p>
         </div>
       </div>
-      <div className="hidden md:block md:w-1/2 h-[600px]"> {/* 데스크톱에서만 보이는 3D 모델 */}
-        <Canvas ref={canvasRef} camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} />
-          <ThreeDModel testResults={testResults} parts={parts} />
-          <OrbitControls />
-        </Canvas>
+
+      {/* 오른쪽 열 */}
+      <div className="md:w-1/2">
+        {/* 상단 행: 점수와 그래프 */}
+        <div className="flex flex-col mb-4">
+          {/* 점수 나열 */}
+          <div className="w-full mb-4">
+            <h3 className="text-xl font-bold mb-2">세부 능력 점수</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(testResults).map(([key, value]) => (
+                <div key={key} className="mb-2">
+                  <span className="font-semibold">{key}: </span>
+                  <span>{value.toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* 오각형 그래프 */}
+          <div className="w-full">
+            <h3 className="text-xl font-bold mb-2">카테고리별 점수</h3>
+            <div className="h-96 bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+              <Radar data={radarData} options={radarOptions} />
+            </div>
+          </div>
+        </div>
+        {/* 하단 행: 3D 모델 */}
+        <div className="h-[700px]">
+          <Canvas ref={canvasRef} camera={{ position: [0, 0, 5] }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} />
+            <ThreeDModel testResults={categoryScores} parts={parts} />
+            <OrbitControls />
+          </Canvas>
+        </div>
       </div>
     </div>
   );

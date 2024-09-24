@@ -1,31 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './SplashScreen.css';
 
-const SplashScreen = ({ imageUrl, onFinish }) => {
-  const [isFullScreen, setIsFullScreen] = useState(true);
+const SplashScreen = ({ videoUrl, onFinish }) => {
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isEnded, setIsEnded] = useState(false);
 
   useEffect(() => {
-    const shrinkTimer = setTimeout(() => {
-      setIsFullScreen(false);
-    }, 2000);
+    const video = videoRef.current;
 
-    const finishTimer = setTimeout(() => {
-      onFinish();
-    }, 3000);
+    const handleEnded = () => {
+      setIsEnded(true);
+      setTimeout(() => {
+        onFinish();
+      }, 1000); // Delay to allow fold-in animation to complete
+    };
+
+    video.addEventListener('ended', handleEnded);
 
     return () => {
-      clearTimeout(shrinkTimer);
-      clearTimeout(finishTimer);
+      video.removeEventListener('ended', handleEnded);
     };
   }, [onFinish]);
 
   return (
-    <div className={`splash-container ${isFullScreen ? 'full-screen' : ''}`}>
-      <img 
-        src={imageUrl} 
-        alt="Splash Screen"
-        className={`splash-image ${isFullScreen ? 'full-screen' : ''}`}
-      />
+    <div className={`splash-container ${isEnded ? 'fold-in' : ''}`} ref={containerRef}>
+      <div className="splash-content">
+        <video
+          ref={videoRef}
+          src={videoUrl}
+          muted
+          playsInline
+          autoPlay
+          className="splash-video"
+        />
+      </div>
     </div>
   );
 };

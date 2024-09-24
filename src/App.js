@@ -17,14 +17,8 @@ const App = () => {
   const [stage, setStage] = useState('splash');
   const [userName, setUserName] = useState('');
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
-  const [testResults, setTestResults] = useState({
-    perception: 0,
-    intelligence: 0,
-    emotion: 0,
-    physical: 0,
-    hidden: 0
-  });
-  const [parts, setParts] = useState(null);
+  const [testResults, setTestResults] = useState({});
+  const [parts, setParts] = useState({});
   const [darkMode, setDarkMode] = useState(true);
   const [isDevMode, setIsDevMode] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
@@ -122,14 +116,8 @@ const App = () => {
     setStage('start');
     setUserName('');
     setAnswers(Array(questions.length).fill(null));
-    setTestResults({
-      perception: 0,
-      intelligence: 0,
-      emotion: 0,
-      physical: 0,
-      hidden: 0
-    });
-    setParts(null);
+    setTestResults({});
+    setParts({});
     setSelectedCount(0);
     setMessage('');
     setCompletedAnswers(0);
@@ -144,7 +132,7 @@ const App = () => {
       <div className="min-h-screen bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text transition-colors duration-200">
         {showSplash && (
           <SplashScreen 
-            imageUrl="images/machinebutcher_logo.jpg" 
+            videoUrl="/images/machinebutcher_logo.mp4" 
             onFinish={() => {
               setShowSplash(false);
               setStage('start');
@@ -205,7 +193,7 @@ const App = () => {
                 />
               )}
             </main>
-          </>
+            </>
         )}
       </div>
     </Router>
