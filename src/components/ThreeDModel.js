@@ -1,5 +1,5 @@
-import React, { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useRef, useMemo, useEffect } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const ThreeDModel = ({ interaction }) => {
@@ -8,6 +8,9 @@ const ThreeDModel = ({ interaction }) => {
   const facesRef = useRef();
   const interactionRef = useRef(0);
   const pulseRef = useRef(0);
+  const mouseRef = useRef(new THREE.Vector2());
+
+  const { camera } = useThree();
 
   const pointCount = 500;
   const maxConnections = 2;
@@ -268,11 +271,30 @@ const ThreeDModel = ({ interaction }) => {
     });
   }, []);
 
+  useEffect(() => {
+    const updateMousePosition = (event) => {
+      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener('mousemove', updateMousePosition);
+
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition);
+    };
+  }, []);
+
   useFrame((state) => {
     if (meshRef.current && linesRef.current && facesRef.current) {
-      meshRef.current.rotation.y += 0.0002;
-      linesRef.current.rotation.y += 0.0002;
-      facesRef.current.rotation.y += 0.0002;
+      // 마우스 위치에 따른 회전 계산
+      const targetRotationY = mouseRef.current.x * Math.PI * 0.5;
+      const targetRotationX = -mouseRef.current.y * Math.PI * 0.5;
+
+      // 부드러운 회전 적용
+      meshRef.current.rotation.y += (targetRotationY - meshRef.current.rotation.y) * 0.1;
+      meshRef.current.rotation.x += (targetRotationX - meshRef.current.rotation.x) * 0.1;
+      linesRef.current.rotation.copy(meshRef.current.rotation);
+      facesRef.current.rotation.copy(meshRef.current.rotation);
 
       const time = state.clock.getElapsedTime();
       meshRef.current.material.uniforms.time.value = time;

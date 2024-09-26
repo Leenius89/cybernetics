@@ -19,7 +19,7 @@ const App = () => {
   const [answers, setAnswers] = useState(Array(questions.length).fill(null));
   const [testResults, setTestResults] = useState({});
   const [parts, setParts] = useState({});
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [isDevMode, setIsDevMode] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
   const [message, setMessage] = useState('');
@@ -81,9 +81,6 @@ const App = () => {
     });
     setInteraction(true);
     setTimeout(() => setInteraction(false), 1000);
-    if (audioRef.current) {
-      audioRef.current.play().catch(e => console.error('Audio play error:', e));
-    }
   };
 
   const handleTestComplete = () => {
@@ -159,6 +156,7 @@ const App = () => {
                       onAnswerChange={handleAnswerChange}
                       onComplete={handleTestComplete}
                       onAnswerComplete={handleAnswerComplete}
+                      audioRef={audioRef}
                     />
                   </div>
                   <div className="md:w-1/2 h-[600px] bg-[#000033] rounded-lg shadow-lg">
