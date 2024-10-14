@@ -54,7 +54,7 @@ const App = () => {
     if (stage === 'splash') {
       const timer = setTimeout(() => {
         setStage('start');
-      }, 3000); // Adjust this time as needed
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [stage]);
@@ -112,7 +112,6 @@ const App = () => {
     setAnswers(Array(questions.length).fill(null));
     setTestResults({});
     setParts({});
-    setSelectedCount(0);
     setMessage('');
     setCompletedAnswers(0);
   };
@@ -188,7 +187,7 @@ const App = () => {
                 />
               )}
             </main>
-            </>
+          </>
         )}
       </div>
     </Router>
