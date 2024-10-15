@@ -3,37 +3,31 @@ const generatePrompt = (results) => {
   return "Cybernetic implant system with L-shaped main module and 4 unique parts. MACHINE BUTCHER Corp branding.";
 };
 
-export const generateAIImage = async (results) => {
+export const generateAIImage = async (testResults) => {
   try {
-    const prompt = generatePrompt(results);
-    console.log('Generated prompt:', prompt);
-
     const response = await fetch('/api/generate-image', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ testResults }),
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const text = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
     }
 
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
-    if (data.status === 'succeeded') {
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+      const data = await response.json();
       return data.imageUrl;
     } else {
-      console.log('Image generation in progress. Status:', data.status);
-      return null;
+      const text = await response.text();
+      throw new Error(`Unexpected content type: ${contentType}, body: ${text}`);
     }
   } catch (error) {
-    console.error('Error generating image:', error);
+    console.error("Error generating image:", error);
     throw error;
   }
 };
