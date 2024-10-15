@@ -115,7 +115,7 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
     } finally {
       setIsGeneratingImage(false);
     }
-  }, [testResults, isGeneratingImage]);  // Added isGeneratingImage to the dependency array
+  }, [testResults, isGeneratingImage]);
 
   useEffect(() => {
     generateImage();
