@@ -115,7 +115,7 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
     } finally {
       setIsGeneratingImage(false);
     }
-  }, [testResults, isGeneratingImage]);
+  }, [testResults]);
 
   useEffect(() => {
     generateImage();
