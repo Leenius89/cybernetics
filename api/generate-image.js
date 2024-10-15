@@ -1,10 +1,22 @@
+import Cors from 'cors';
+import initMiddleware from '../../lib/init-middleware';
 const Replicate = require('replicate');
+
+// CORS 미들웨어 초기화
+const cors = initMiddleware(
+  Cors({
+    methods: ['POST', 'OPTIONS'],
+  })
+);
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
+  // CORS 미들웨어 실행
+  await cors(req, res);
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).end(`Method ${req.method} Not Allowed`);
@@ -55,4 +67,4 @@ module.exports = async (req, res) => {
       apiResponse: error.response ? error.response.data : undefined
     });
   }
-};
+}
