@@ -1,3 +1,4 @@
+console.log('React app is starting to render');
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
