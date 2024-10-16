@@ -25,6 +25,14 @@ export default [
     rules: {
       "react/react-in-jsx-scope": "off",
       "import/first": "off",
+      "import/order": ["error", {
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }]
     },
     settings: {
       'import/resolver': {
