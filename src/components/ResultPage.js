@@ -121,7 +121,7 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
     if (!aiImage && !isGeneratingImage && !error) {
       generateImage();
     }
-  }, [aiImage, isGeneratingImage, error, generateImage]);
+  }, [aiImage, isGeneratingImage, error]);
 
   return (
     <div className="flex flex-col space-y-4">
