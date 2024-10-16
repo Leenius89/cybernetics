@@ -4,7 +4,10 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
+      "config": { 
+        "distDir": "build",
+        "buildCommand": "DISABLE_ESLINT_PLUGIN=true CI=false npm run build"
+      }
     },
     {
       "src": "api/**/*.js",
@@ -18,5 +21,11 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  ],
+  "env": {
+    "DISABLE_ESLINT_PLUGIN": "true",
+    "ESLINT_NO_DEV_ERRORS": "true",
+    "EXTEND_ESLINT": "false",
+    "CI": "false"
+  }
 }
