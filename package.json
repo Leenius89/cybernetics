@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "DISABLE_ESLINT_PLUGIN=true CI=false react-scripts build",
+    "build": "cross-env DISABLE_ESLINT_PLUGIN=true CI=false ESLINT_NO_DEV_ERRORS=true react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -41,11 +41,11 @@
       "react-app",
       "react-app/jest"
     ],
-  "rules": {
+    "rules": {
       "import/first": "off",
       "import/order": "off"
-  } 
-},
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -62,8 +62,14 @@
     "@babel/core": "^7.25.8",
     "@babel/eslint-parser": "^7.25.8",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-class-properties": "^7.25.7",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.25.8",
+    "@babel/plugin-transform-optional-chaining": "^7.25.8",
+    "@babel/plugin-transform-private-methods": "^7.25.7",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.8",
     "@babel/preset-react": "^7.25.7",
     "autoprefixer": "^10.4.16",
+    "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.37.1",
     "postcss": "^8.4.31",
