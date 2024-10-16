@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "homepage": ".",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.17",
     "@react-three/drei": "^9.88.0",
@@ -15,6 +16,7 @@
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "eslint-plugin-import": "^2.31.0",
     "express": "^4.21.0",
     "http-proxy-middleware": "^3.0.3",
     "lucide-react": "^0.292.0",
@@ -55,8 +57,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/eslint-parser": "^7.25.8",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/preset-react": "^7.25.7",
     "autoprefixer": "^10.4.16",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.1",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.5"
   },
