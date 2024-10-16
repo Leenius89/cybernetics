@@ -24,7 +24,14 @@ export default [
     },
     rules: {
       "react/react-in-jsx-scope": "off",
-      "import/first": "off",  // 이 줄을 추가하여 import/first 규칙을 비활성화합니다.
+      "import/first": "off",
+    },
+    settings: {
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx', '.ts', '.tsx']
+        }
+      },
     },
   },
 ];

@@ -1,9 +1,7 @@
 {
   "name": "cybernetic-psyche-test",
   "version": "0.1.0",
-  "homepage": ".",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.17",
     "@react-three/drei": "^9.88.0",
@@ -34,9 +32,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "server": "node server.js",
-    "dev": "concurrently \"npm run start\" \"npm run server\""
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
