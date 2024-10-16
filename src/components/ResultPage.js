@@ -116,12 +116,16 @@ const ResultPage = ({ testResults, parts, userName, onRestart }) => {
       setIsGeneratingImage(false);
     }
   }, [testResults, isGeneratingImage]);
-
+  
   useEffect(() => {
     if (!aiImage && !isGeneratingImage && !error) {
       generateImage();
     }
-  }, [aiImage, isGeneratingImage, error]);
+  }, [aiImage, isGeneratingImage, error, generateImage]);
+
+  const handleGenerateImage = () => {
+    generateImage();
+  };
 
   return (
     <div className="flex flex-col space-y-4">
