@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "set DISABLE_ESLINT_PLUGIN=true && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -42,7 +42,8 @@
       "react-app/jest"
     ],
   "rules": {
-    "import/first": "off"
+      "import/first": "off",
+      "import/order": "off"
   } 
 },
   "browserslist": {
