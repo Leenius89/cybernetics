@@ -1,6 +1,7 @@
 {
   "name": "cybernetic-psyche-test",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.17",
@@ -60,6 +61,6 @@
     "tailwindcss": "^3.3.5"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=14.x"
   }
 }
