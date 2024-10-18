@@ -18,9 +18,7 @@
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
-  "build": {
-    "env": {
-      "NPM_FLAGS": "--verbose"
-    }
+  "env": {
+    "REPLICATE_API_TOKEN": "@replicate_api_token"
   }
 }

@@ -14,11 +14,16 @@ const replicate = new Replicate({
 });
 
 export default async function handler(req, res) {
+  // CORS 미들웨어 실행
   await cors(req, res);
 
+  // OPTIONS 요청 처리
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    res.setHeader('Allow', ['POST']);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
@@ -54,16 +59,12 @@ export default async function handler(req, res) {
       throw new Error('Invalid response from Replicate API');
     }
 
-    res.json({ imageUrl: output[0] });
+    res.status(200).json({ imageUrl: output[0] });
   } catch (error) {
     console.error('Error generating image:', error);
-    if (error.response) {
-      console.error('API response:', error.response.data);
-    }
     res.status(500).json({ 
       error: 'Failed to generate image', 
-      details: error.message,
-      apiResponse: error.response ? error.response.data : undefined
+      details: error.message
     });
   }
 }
