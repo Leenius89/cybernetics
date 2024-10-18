@@ -1,6 +1,6 @@
 import Cors from 'cors';
 import initMiddleware from '../../lib/init-middleware';
-const Replicate = require('replicate');
+import Replicate from 'replicate';
 
 // CORS 미들웨어 초기화
 const cors = initMiddleware(
@@ -14,7 +14,6 @@ const replicate = new Replicate({
 });
 
 export default async function handler(req, res) {
-  // CORS 미들웨어 실행
   await cors(req, res);
 
   if (req.method !== 'POST') {
