@@ -2,7 +2,6 @@ import Cors from 'cors';
 import initMiddleware from '../../lib/init-middleware';
 import Replicate from 'replicate';
 
-// CORS 미들웨어 초기화
 const cors = initMiddleware(
   Cors({
     methods: ['POST', 'OPTIONS'],
@@ -14,10 +13,8 @@ const replicate = new Replicate({
 });
 
 export default async function handler(req, res) {
-  // CORS 미들웨어 실행
   await cors(req, res);
 
-  // OPTIONS 요청 처리
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -36,15 +33,7 @@ export default async function handler(req, res) {
 
     console.log('Using API token:', process.env.REPLICATE_API_TOKEN ? 'Set' : 'Not set');
     
-    const input = { 
-      prompt,
-      num_outputs: 1,
-      go_fast: true,
-      megapixels: "1",
-      aspect_ratio: "1:1",
-      output_format: "png",
-      num_inference_steps: 4
-    };
+    const input = { prompt };
 
     console.log('Sending request to Replicate API:', input);
 
