@@ -1,9 +1,6 @@
-const API_URL = process.env.REACT_APP_API_URL || '/api';
-
-export const generateAIImage = async (testResults) => {
+const generateAIImage = async (prompt) => {
   try {
-    const prompt = generatePrompt(testResults);
-    const response = await fetch(`${API_URL}/generate-image`, {
+    const response = await fetch('/api/generate-image', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,7 +16,7 @@ export const generateAIImage = async (testResults) => {
     const data = await response.json();
     return data.imageUrl;
   } catch (error) {
-    console.error("Error generating image:", error);
+    console.error('Error generating image:', error);
     throw error;
   }
 };

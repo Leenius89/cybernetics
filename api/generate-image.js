@@ -1,18 +1,16 @@
-const Replicate = require('replicate');
+import Replicate from 'replicate';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // CORS 헤더 설정
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-  // OPTIONS 요청 처리
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // POST 요청 처리
   if (req.method === 'POST') {
     try {
       const { prompt } = req.body;
@@ -33,10 +31,9 @@ module.exports = async (req, res) => {
       return res.status(200).json({ imageUrl: output[0] });
     } catch (error) {
       console.error('Error generating image:', error);
-      return res.status(500).json({ error: 'Failed to generate image' });
+      return res.status(500).json({ error: 'Failed to generate image', details: error.message });
     }
   }
 
-  // 다른 메소드에 대한 처리
   return res.status(405).json({ error: 'Method Not Allowed' });
-};
+}
