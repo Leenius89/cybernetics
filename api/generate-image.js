@@ -33,12 +33,15 @@ export default async function handler(req, res) {
 
     console.log('Using API token:', process.env.REPLICATE_API_TOKEN ? 'Set' : 'Not set');
     
-    const input = { prompt };
+    const input = {
+      prompt: prompt,
+      hf_lora: "alvdansen/frosting_lane_flux"
+    };
 
     console.log('Sending request to Replicate API:', input);
 
     const output = await replicate.run(
-      "black-forest-labs/flux-schnell:7adaee263f8313a267e7bba9892528d50a0a64b9f309e03f6c903aaf991529f2",
+      "lucataco/flux-schnell-lora:2a6b576af31790b470f0a8442e1e9791213fa13799cbb65a9fc1436e96389574",
       { input }
     );
     
