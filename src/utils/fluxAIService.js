@@ -1,9 +1,9 @@
-const API_URL = process.env.REACT_APP_API_URL || '/api';
+const API_URL = '/api/generate-image';
 
 export const generateAIImage = async (testResults) => {
   try {
     const prompt = generatePrompt(testResults);
-    const response = await fetch(`${API_URL}/generate-image`, {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
